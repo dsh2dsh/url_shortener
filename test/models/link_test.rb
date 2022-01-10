@@ -56,4 +56,11 @@ class LinkTest < ActiveSupport::TestCase
     @link.uuid = nil
     assert @link.invalid?
   end
+
+  test 'slug format' do
+    @link.slug = 'a/b'
+    assert @link.invalid?
+    @link.slug = 'abc-def'
+    assert @link.valid?
+  end
 end

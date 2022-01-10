@@ -13,7 +13,8 @@ require 'securerandom'
 # If slug is nil it will be auto generated random string.
 class Link < ApplicationRecord
   validates :url, :slug, :uuid, presence: true
-  validates :slug, uniqueness: true
+  validates :slug, uniqueness: true, format: { with: /\A[\w-]+\Z/,
+                                               message: 'must contains alphanumerics only' }
   validates :url, format: { with: %r{\Ahttps?://.+},
                             message: 'must begin with a HTTP protocol' }
 
