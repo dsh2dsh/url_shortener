@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  url: http://127.0.0.1:3000
+  slug: slug1
+  uuid: uuid1
+
+expired:
+  url: http://127.0.0.1:3000/expired
+  slug: slug2
+  uuid: uuid1
