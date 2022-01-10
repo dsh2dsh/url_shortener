@@ -35,4 +35,25 @@ $ gem install bundler
 $ bundle install
 ```
 
-Everything is installed now.
+Everything is installed now and we need to setup our application as
+the last step:
+
+```
+$ bin/setup
+```
+
+Ready! Now we can test it
+
+```
+$ rails t
+```
+
+and run it if all tests passed
+
+```
+$ rails s
+```
+
+and go to http://127.0.0.1:3000
+
+Press Ctrl-C to stop it.
