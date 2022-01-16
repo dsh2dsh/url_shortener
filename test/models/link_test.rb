@@ -44,7 +44,7 @@ class LinkTest < ActiveSupport::TestCase
   end
 
   test 'expiration of links' do
-    @link.expire_at = Time.now - 1.day
+    @link.expire_at = Time.current - 1.day
     assert @link.save
     cnt = Link.count
     Link.expire_links

@@ -13,17 +13,22 @@ require 'securerandom'
 # If slug is nil it will be auto generated random string.
 class Link < ApplicationRecord
   validates :url, :slug, :uuid, presence: true
-  validates :slug, uniqueness: true, format: { with: /\A[\w-]+\Z/,
-                                               message: 'must contains alphanumerics only' }
-  validates :url, format: { with: %r{\Ahttps?://.+},
-                            message: 'must begin with a HTTP protocol' }
+  validates :slug,
+            uniqueness: true,
+            format: {
+              with: /\A[\w-]+\Z/,
+              message: 'must contains alphanumerics only'
+            }
+  validates :url,
+            format: {
+              with: %r{\Ahttps?://.+},
+              message: 'must begin with a HTTP protocol'
+            }
 
-  before_validation do
-    self.slug = SecureRandom.alphanumeric(10) if slug.blank?
-  end
+  before_validation { self.slug = SecureRandom.alphanumeric(10) if slug.blank? }
 
   # Deletes all expired links.
   def self.expire_links
-    delete_by('expire_at IS NOT NULL AND expire_at < ?', Time.now)
+    delete_by('expire_at IS NOT NULL AND expire_at < ?', Time.current)
   end
 end

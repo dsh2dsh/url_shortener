@@ -22,7 +22,7 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
     get links_url, as: :json
     assert_response :success
     assert_not_equal cookies[:uuid], @link.uuid
-    assert response.parsed_body.empty?
+    assert_empty response.parsed_body
   end
 
   test 'should get new' do
@@ -40,7 +40,13 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create link' do
     assert_difference -> { Link.where(uuid: @link.uuid).count } do
-      post links_url, params: { link: { expire_at: @link.expire_at, url: @link.url } }
+      post links_url,
+           params: {
+             link: {
+               expire_at: @link.expire_at,
+               url: @link.url
+             }
+           }
     end
 
     assert_redirected_to link_url(Link.last)
@@ -48,9 +54,15 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
 
   test 'create link should expire too old links' do
     expired = links(:expired)
-    expired.update expire_at: (Time.now - 1.day)
+    expired.update expire_at: (Time.current - 1.day)
     assert_difference('Link.count', 0) do
-      post links_url, params: { link: { expire_at: @link.expire_at, url: @link.url } }
+      post links_url,
+           params: {
+             link: {
+               expire_at: @link.expire_at,
+               url: @link.url
+             }
+           }
     end
   end
 
@@ -72,7 +84,14 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should update link' do
-    patch link_url(@link), params: { link: { expire_at: @link.expire_at, slug: @link.slug, url: @link.url } }
+    patch link_url(@link),
+          params: {
+            link: {
+              expire_at: @link.expire_at,
+              slug: @link.slug,
+              url: @link.url
+            }
+          }
     assert_redirected_to link_url(@link)
   end
 
@@ -93,7 +112,7 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
 
   test 'should not redirect to expired link' do
     expired = links(:expired)
-    expired.update expire_at: (Time.now - 1.day)
+    expired.update expire_at: (Time.current - 1.day)
     assert_raises ActiveRecord::RecordNotFound do
       get short_url(slug: expired.slug)
     end
@@ -101,7 +120,7 @@ class LinksControllerTest < ActionDispatch::IntegrationTest
 
   test 'should redirect to link with future expiration' do
     expired = links(:expired)
-    expired.update expire_at: (Time.now + 1.day)
+    expired.update expire_at: (Time.current + 1.day)
     get short_url(slug: @link.slug)
     assert_redirected_to @link.url
   end
